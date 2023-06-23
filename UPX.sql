@@ -3,40 +3,40 @@ create database PetshopAC2;
 use PetshopAC2;
 
 create table cliente(
-	CPF					varchar(20)			primary key,
+	CPF				varchar(20)			primary key,
 	nome				varchar(60)
 );
 
 create table cliente_tel(
 	id_cliente			varchar(20),
-    tel					varchar(45),
+    	tel					varchar(45),
     
-    foreign key (id_cliente) references cliente(CPF)
+    	foreign key (id_cliente) references cliente(CPF)
 );
 
 create table cliente_end(
 	id_cliente			varchar(20),
-    rua					varchar(30),
-    numero				int,
-    bairro				varchar(20),
-    cidade				varchar(20),
+    	rua				varchar(30),
+    	numero				int,
+    	bairro				varchar(20),
+    	cidade				varchar(20),
     
-    foreign key (id_cliente) references cliente(CPF)
+    	foreign key (id_cliente) references cliente(CPF)
 );
 
 create table pet(
-	id					int				primary key auto_increment,
-    nome				varchar(45),
-    data_nasc			date,
-    raca				varchar(45),
-    cor					varchar(45),
-    peso				decimal(10,2),
+	id				int				primary key auto_increment,
+    	nome				varchar(45),
+    	data_nasc			date,
+    	raca				varchar(45),
+    	cor				varchar(45),
+    	peso				decimal(10,2),
 	tipo				varchar(30)
 );
 
 create table fornecedor(
-	id_fornecedor		int					primary key	auto_increment,
-    CNPJ				varchar(60),
+	id_fornecedor			int				primary key	auto_increment,
+    	CNPJ				varchar(60),
 	nome				varchar(45),
 	site				varchar(60),
 	forn_tel			varchar(45)
@@ -50,26 +50,26 @@ create table insumos(
 	tipo				varchar(60),
 	data_val			date,
 	fornecedor			int,
-    quantidade			int,
+    	quantidade			int,
 
 	FOREIGN KEY (fornecedor) REFERENCES fornecedor(id_fornecedor)
 );
 
 create table cadastro(
 	cliente_CPF			varchar(20),
-    pet_id				int,
+    	pet_id				int,
     
-    foreign key (cliente_CPF) references cliente(CPF),
-    foreign key	(pet_id) references pet(id)
+    	foreign key (cliente_CPF) references cliente(CPF),
+    	foreign key (pet_id) references pet(id)
 );
 
 create table compra(
 	cadastro_cliente	varchar(20),
-    compra_insumos		int,
-    data_compra			date,
+    	compra_insumos		int,
+    	data_compra		date,
     
-    foreign key (cadastro_cliente) references cliente(CPF),
-    foreign key (compra_insumos) references insumos(id)
+    	foreign key (cadastro_cliente) references cliente(CPF),
+    	foreign key (compra_insumos) references insumos(id)
 );
 
 insert into cliente values ('12345678900', 'Naomi Rodrigues Teixeira');
@@ -118,7 +118,7 @@ insert into insumos values (null, 'Golden Cookie Adulto', 15.90, 0.350, 'Petisco
 delimiter //
 create procedure cadastro_pet(
 	in cliente		varchar(20),
-    in pet			int
+    	in pet			int
 )
 begin
 	insert into cadastro (cliente_CPF, pet_id) values (cliente, pet);
@@ -137,18 +137,18 @@ call cadastro_pet ('45213698752', 6);
 CREATE TRIGGER atualiza_quantidade BEFORE INSERT ON compra
 FOR EACH ROW
 BEGIN
-    SET @quantidade_atual = (SELECT quantidade FROM insumos WHERE id_insumos = NEW.compra_insumos);
-    SET @nova_quantidade = @quantidade_atual - 1;
+    	SET @quantidade_atual = (SELECT quantidade FROM insumos WHERE id_insumos = NEW.compra_insumos);
+    	SET @nova_quantidade = @quantidade_atual - 1;
 
 	UPDATE insumos SET quantidade = @nova_quantidade WHERE id_insumos = NEW.compra_insumos;
-   
+
 END;
 
 -- procedure que possibilita o registro de compras
 create procedure cadastro_compra(
 	in cliente		varchar(20),
-    in produto		int,
-    in data_compra	date
+    	in produto		int,
+    	in data_compra		date
 )
 begin
 	insert into compra (cadastro_cliente, compra_insumos, data_compra) values (cliente, produto, data_compra);
